@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.world.auth.mapper.SysPermissionMapper">
+    <resultMap id="sysPermissions" type="SysPermission">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <result column="pm_name" property="pmName" jdbcType="VARCHAR"></result>
+        <result column="description" property="description" jdbcType="VARCHAR"></result>
+        <result column="url" property="url" jdbcType="VARCHAR"></result>
+        <result column="pid" property="pid" jdbcType="VARCHAR"></result>
+    </resultMap>
+
+    <select id="findAll" resultMap="sysPermissions">
+        select * from sys_permission
+    </select>
+
+    <select id="findByAdminUserId" resultType="SysPermission">
+        select p.*
+        from sys_User u
+        LEFT JOIN sys_role_user sru on u.id= sru.Sys_User_id
+        LEFT JOIN sys_Role r on sru.Sys_Role_id=r.id
+        LEFT JOIN sys_permission_role spr on spr.sys_role_id=r.id
+        LEFT JOIN sys_permission p on p.id =spr.sys_permission_id
+        where u.id=#{userId}
+    </select>
+</mapper>

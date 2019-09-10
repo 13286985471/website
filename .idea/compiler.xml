@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="site-auth" />
+        <module name="site-eureka" />
+        <module name="site-zuul" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="site-auth" target="1.8" />
+      <module name="site-eureka" target="1.8" />
+      <module name="site-service" target="1.8" />
+      <module name="site-timming" target="1.8" />
+      <module name="site-zuul" target="1.8" />
+      <module name="website" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="site-auth" options="-parameters" />
+      <module name="site-eureka" options="-parameters" />
+      <module name="site-service" options="-parameters" />
+      <module name="site-timming" options="-parameters" />
+      <module name="site-zuul" options="-parameters" />
+      <module name="website" options="-parameters" />
+    </option>
+  </component>
+</project>
