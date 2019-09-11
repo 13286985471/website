@@ -1,7 +1,6 @@
 package it.world.zuul.config;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import it.world.zuul.common.IgnoreUrls;
 import it.world.zuul.entity.SysUser;
 import org.slf4j.Logger;
@@ -9,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -17,22 +18,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -48,7 +42,7 @@ import java.util.Map;
     protected void configure(HttpSecurity http) throws Exception {
 
         //定制请求的授权规则
-        http.authenticationProvider(getDaoAuthenticationProvider())
+        http.authenticationProvider(authenticationProvider())
                 //不需要登录授权的url(IgnoreUrls.url)
                 .authorizeRequests().antMatchers(IgnoreUrls.url)
                 .permitAll()
@@ -70,7 +64,7 @@ import java.util.Map;
         //1.login来到登录页,有默认登录页
         //2.登录失败重定向到login?error
         //3.loginProcessingUrl 在自定义登录页面后，这个验证登录的地址也需要自己定义
-        http.formLogin().loginProcessingUrl("/authentication/form")
+        http.oauth2Login().loginProcessingUrl("/authentication/form")
                 //登录失败，返回json
                 .failureHandler((request,response,ex) -> {
                     response.setContentType("application/json;charset=utf-8");
@@ -99,6 +93,7 @@ import java.util.Map;
                     map.put("state","1");
                     map.put("username",user.getUsername());
                     map.put("roles",user.getRoles());
+                    logger.debug("用户登录:---->"+user.getUsername());
                     returnJson(response,map);
                 })
                 .and()
@@ -120,11 +115,12 @@ import java.util.Map;
                 .logoutSuccessHandler((request,response,authentication) -> {
                     response.setContentType("application/json;charset=utf-8");
                     response.setStatus(HttpServletResponse.SC_OK);
+                    SysUser user=(SysUser) authentication.getPrincipal();
                     Map<String,Object> map = new HashMap<String,Object>();
                     map.put("operation","logout");
                     map.put("state","1");
                     map.put("message","退出成功");
-                    logger.debug("用户退出:---->"+map.get("message"));
+                    logger.debug("用户退出:---->"+user.getUsername());
                     returnJson(response,map);
                 });
 
@@ -138,7 +134,9 @@ import java.util.Map;
         //http.exceptionHandling().accessDeniedPage("/adp");
         http.rememberMe();
 
-        //关闭 csrf (跨站请求伪造)
+        //开启跨域访问
+        http.cors().disable();
+        //开启模拟请求，比如API POST测试工具的测试，不开启时，API POST为报403错误
         http.csrf().disable();
     }
 
@@ -157,7 +155,7 @@ import java.util.Map;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(getDaoAuthenticationProvider());
+        auth.authenticationProvider(authenticationProvider());
     }
 
 
@@ -166,7 +164,7 @@ import java.util.Map;
      * @return
      */
     @Bean
-    public DaoAuthenticationProvider getDaoAuthenticationProvider() {
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setHideUserNotFoundExceptions(false);
@@ -175,18 +173,10 @@ import java.util.Map;
     }
 
 
-    @Bean
-    public SavedRequestAwareAuthenticationSuccessHandler loginSuccessHandler() { //登入处理
-        return new SavedRequestAwareAuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                User userDetails = (User) authentication.getPrincipal();
-                logger.info("USER : " + userDetails.getUsername() + " LOGIN SUCCESS !  ");
-                super.onAuthenticationSuccess(request, response, authentication);
-            }
-        };
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        //对于在header里面增加token等类似情况，放行所有OPTIONS请求。
+        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
     }
-
-
 }
 
