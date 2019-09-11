@@ -2,11 +2,15 @@ package it.world.zuul.config;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import it.world.zuul.common.IgnoreUrls;
+import it.world.zuul.entity.SysUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +20,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -44,39 +49,110 @@ import java.util.Map;
 
         //定制请求的授权规则
         http.authenticationProvider(getDaoAuthenticationProvider())
-                .httpBasic()
+                //不需要登录授权的url(IgnoreUrls.url)
+                .authorizeRequests().antMatchers(IgnoreUrls.url)
+                .permitAll()
+                //其他所有页面必须验证后才可以访问
+                .and().authorizeRequests().anyRequest().authenticated()
+                .and().httpBasic()
                 //未登录时，进行json格式的提示
                 .authenticationEntryPoint((request,response,authException) -> {
                     response.setContentType("application/json;charset=utf-8");
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    PrintWriter out = response.getWriter();
-                    Map<String,Object> map = new HashMap<String,Object>();
-                    map.put("code",403);
-                    map.put("message","未登录");
-                    out.write(JSON.toJSONString(map));
-                    out.flush();
-                    out.close();
-                }).and().
-                authorizeRequests().antMatchers("/","/userlogin","/error","/login","/authentication/form","/adp").permitAll()
-                //其他所有页面必须验证后才可以访问
-                .and().authorizeRequests().anyRequest().authenticated();
+                    Map map=new HashMap();
+                    map.put("message", "未登录");
+                    map.put("operation","servlet");
+                    map.put("state","0");
+                    returnJson(response,map);
+                });
 
         //开启自动配置的登录功能
         //1.login来到登录页,有默认登录页
         //2.登录失败重定向到login?error
         //3.loginProcessingUrl 在自定义登录页面后，这个验证登录的地址也需要自己定义
-        http.formLogin().loginPage("/login").loginProcessingUrl("/authentication/form").failureUrl("/error");
+        http.formLogin().loginProcessingUrl("/authentication/form")
+                //登录失败，返回json
+                .failureHandler((request,response,ex) -> {
+                    response.setContentType("application/json;charset=utf-8");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    Map map = new HashMap();
+                    map.put("operation","login");
+                    map.put("state","0");
+                    if (ex instanceof UsernameNotFoundException || ex instanceof BadCredentialsException) {
+                        map.put("message","用户名或密码错误");
+                    } else if (ex instanceof DisabledException) {
+                        map.put("message","账户被禁用");
+                    } else {
+                        map.put("message","系统繁忙，请稍后重试");
+                        logger.debug("登录系统异常:---->"+ex.getMessage());
+                    }
+                    logger.debug("登录失败:---->"+map.get("message"));
+                    returnJson(response,map);
+                })//登录成功，返回json
+                .successHandler((request,response,authentication) -> {
+                    response.setContentType("application/json;charset=utf-8");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    SysUser user=(SysUser) authentication.getPrincipal();
+                    Map map = new HashMap();
+                    map.put("message","登录成功");
+                    map.put("operation","login");
+                    map.put("state","1");
+                    map.put("username",user.getUsername());
+                    map.put("roles",user.getRoles());
+                    returnJson(response,map);
+                })
+                .and()
+                .exceptionHandling()
+                //没有权限，返回json
+                .accessDeniedHandler((request,response,ex) -> {
+                    response.setContentType("application/json;charset=utf-8");
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    Map map=new HashMap();
+                    map.put("operation","servlet");
+                    map.put("state","0");
+                    map.put("message", "权限不足");
+                    logger.debug("访问失败:---->"+ex.getMessage());
+                    returnJson(response, map);
+                })
+                .and()
+                .logout()
+                //退出成功，返回json
+                .logoutSuccessHandler((request,response,authentication) -> {
+                    response.setContentType("application/json;charset=utf-8");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    Map<String,Object> map = new HashMap<String,Object>();
+                    map.put("operation","logout");
+                    map.put("state","1");
+                    map.put("message","退出成功");
+                    logger.debug("用户退出:---->"+map.get("message"));
+                    returnJson(response,map);
+                });
+
+
         //开启自动配置的注销功能
         //注销后默认login?logout
         //.logoutSuccessUrl()可配置注销成功后跳转页
-        http.logout().logoutSuccessUrl("/");
+        //http.logout().logoutSuccessUrl("/");
 
         //权限拒绝页面
-        http.exceptionHandling().accessDeniedPage("/adp");
+        //http.exceptionHandling().accessDeniedPage("/adp");
         http.rememberMe();
 
         //关闭 csrf (跨站请求伪造)
         http.csrf().disable();
+    }
+
+    /**
+     * 登录验证授权返回json信息
+     * @param response
+     * @param map
+     * @throws IOException
+     */
+    public void returnJson(HttpServletResponse response,Map map) throws IOException {
+        PrintWriter out = response.getWriter();
+        out.write(JSON.toJSONString(map));
+        out.flush();
+        out.close();
     }
 
     @Override
@@ -110,6 +186,7 @@ import java.util.Map;
             }
         };
     }
+
 
 }
 
