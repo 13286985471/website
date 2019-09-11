@@ -1,5 +1,7 @@
 package it.world.zuul.config;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
@@ -21,6 +24,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -33,8 +41,23 @@ import java.io.IOException;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         //定制请求的授权规则
-        http.authorizeRequests().antMatchers("/","/userlogin","/error","/login","/authentication/form","/adp").permitAll()
+        http.authenticationProvider(getDaoAuthenticationProvider())
+                .httpBasic()
+                //未登录时，进行json格式的提示
+                .authenticationEntryPoint((request,response,authException) -> {
+                    response.setContentType("application/json;charset=utf-8");
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    PrintWriter out = response.getWriter();
+                    Map<String,Object> map = new HashMap<String,Object>();
+                    map.put("code",403);
+                    map.put("message","未登录");
+                    out.write(JSON.toJSONString(map));
+                    out.flush();
+                    out.close();
+                }).and().
+                authorizeRequests().antMatchers("/","/userlogin","/error","/login","/authentication/form","/adp").permitAll()
                 //其他所有页面必须验证后才可以访问
                 .and().authorizeRequests().anyRequest().authenticated();
 
@@ -52,6 +75,7 @@ import java.io.IOException;
         http.exceptionHandling().accessDeniedPage("/adp");
         http.rememberMe();
 
+        //关闭 csrf (跨站请求伪造)
         http.csrf().disable();
     }
 
@@ -59,7 +83,6 @@ import java.io.IOException;
     protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(getDaoAuthenticationProvider());
     }
-
 
 
     /**
