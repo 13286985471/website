@@ -12,7 +12,7 @@ public class KungfuController {
 	 * 欢迎页
 	 * @return
 	 */
-	@GetMapping("/")
+	@RequestMapping("/")
 	public String index() {
 		return "welcome";
 	}
