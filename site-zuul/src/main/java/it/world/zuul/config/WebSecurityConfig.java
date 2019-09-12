@@ -64,7 +64,7 @@ import java.util.Map;
         //1.login来到登录页,有默认登录页
         //2.登录失败重定向到login?error
         //3.loginProcessingUrl 在自定义登录页面后，这个验证登录的地址也需要自己定义
-        http.oauth2Login().loginProcessingUrl("/authentication/form")
+        http.formLogin().loginProcessingUrl("/authentication/form")
                 //登录失败，返回json
                 .failureHandler((request,response,ex) -> {
                     response.setContentType("application/json;charset=utf-8");
@@ -174,7 +174,7 @@ import java.util.Map;
 
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web){
         //对于在header里面增加token等类似情况，放行所有OPTIONS请求。
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
     }
