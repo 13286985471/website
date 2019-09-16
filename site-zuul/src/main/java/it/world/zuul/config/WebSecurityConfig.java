@@ -113,8 +113,18 @@ import java.util.Map;
                 .logoutSuccessHandler((request,response,authentication) -> {
                     response.setContentType("application/json;charset=utf-8");
                     response.setStatus(HttpServletResponse.SC_OK);
-                    SysUser user=(SysUser) authentication.getPrincipal();
+                    SysUser user=null;
                     Map<String,Object> map = new HashMap<String,Object>();
+                    try{
+                        user=(SysUser) authentication.getPrincipal();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        map.put("operation","logout");
+                        map.put("state","0");
+                        map.put("message","退出失败，暂无用户登录");
+                        logger.debug("退出失败，暂无用户登录");
+                        returnJson(response,map);
+                    }
                     map.put("operation","logout");
                     map.put("state","1");
                     map.put("message","退出成功");
@@ -134,7 +144,7 @@ import java.util.Map;
 
         //关闭跨域资源共享保护
         http.cors().disable();
-        
+
         //关闭跨站请求伪造保护（开启后类似postman不能模拟访问）
         http.csrf().disable();
     }
