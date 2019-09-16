@@ -77,10 +77,8 @@ import java.util.Map;
                     } else if (ex instanceof DisabledException) {
                         map.put("message","账户被禁用");
                     } else {
-                        map.put("message","系统繁忙，请稍后重试");
-                        logger.debug("登录系统异常:---->"+ex.getMessage());
+                        map.put("message",ex.getMessage());
                     }
-                    logger.debug("登录失败:---->"+map.get("message"));
                     returnJson(response,map);
                 })//登录成功，返回json
                 .successHandler((request,response,authentication) -> {
