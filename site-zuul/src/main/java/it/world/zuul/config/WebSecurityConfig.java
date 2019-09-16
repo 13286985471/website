@@ -124,6 +124,7 @@ import java.util.Map;
                         map.put("message","退出失败，暂无用户登录");
                         logger.debug("退出失败，暂无用户登录");
                         returnJson(response,map);
+                        return;
                     }
                     map.put("operation","logout");
                     map.put("state","1");
