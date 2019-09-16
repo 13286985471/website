@@ -132,9 +132,10 @@ import java.util.Map;
         //http.exceptionHandling().accessDeniedPage("/adp");
         http.rememberMe();
 
-        //开启跨域访问
+        //关闭跨域资源共享保护
         http.cors().disable();
-        //开启模拟请求，比如API POST测试工具的测试，不开启时，API POST为报403错误
+        
+        //关闭跨站请求伪造保护（开启后类似postman不能模拟访问）
         http.csrf().disable();
     }
 
