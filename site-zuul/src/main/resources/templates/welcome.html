@@ -11,7 +11,7 @@
 </div>
 <div sec:authorize="isAuthenticated()">
 	<h2 ><span sec:authentication="name"></span><span sec:authentication="principal.authorities"></span></h2>
-	<form action="/logout">
+	<form action="/logout" method="post">
 		<input type="submit" value="注销"/>
 	</form>
 </div>
