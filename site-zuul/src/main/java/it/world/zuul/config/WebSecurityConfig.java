@@ -118,7 +118,7 @@ import java.util.Map;
                     try{
                         user=(SysUser) authentication.getPrincipal();
                     }catch (Exception e){
-                        e.printStackTrace();
+                        //e.printStackTrace();
                         map.put("operation","logout");
                         map.put("state","0");
                         map.put("message","退出失败，暂无用户登录");
