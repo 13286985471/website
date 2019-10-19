@@ -1,10 +1,8 @@
-package it.world.zuul.config.impl;
+package it.world.auth.config.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import it.world.zuul.entity.SysPermission;
-import it.world.zuul.mapper.AuthFeign;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import it.world.auth.entity.SysPermission;
+import it.world.auth.service.SysPermissionService;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -18,39 +16,17 @@ import java.util.*;
 @Service
 public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocationSecurityMetadataSource {
 
-    private Map<String, Collection<ConfigAttribute>> map=null;
+    private Map<String, Collection<ConfigAttribute>> map;
 
-    @Autowired
-    private AuthFeign authFeign;
-    /*public FilterInvocationSecurityMetadataSourceImpl(HashMap<String, Collection<ConfigAttribute>> map) {
-        this.map = loadResourceDefine();
-    }*/
+    private SysPermissionService sysPermissionService;
+
 
     public void  loadResourceDefine() {
         map = new HashMap<>();
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
 
-        //获取当前用户的所有角色
-        /*List<SysRole> roles = ((SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getRoles();
-        if(!roles.isEmpty()){
-            for(SysRole role:roles){
-                List<SysPermission> sysPermissions= role.getSysPermissions();
-                //遍历用户中的所有权限
-                for (SysPermission sysPermission : sysPermissions) {
-                    array = new ArrayList<>();
-                    //此处只添加了用户的名字，其实还可以添加更多权限的信息，例如请求方法到ConfigAttribute的集合中去。此处添加的信息将会作为MyAccessDecisionManager类的decide的第三个参数。
-                    cfg = new SecurityConfig(sysPermission.getPmName());
-                    array.add(cfg);
-                    //用权限的getUrl() 作为map的key，用ConfigAttribute的集合作为 value
-                    map.put(sysPermission.getUrl(), array);
-                }
-            }
-        }*/
-
-        String strSpm=authFeign.queryAllSPM();
-        JSONArray jsonSpm= JSONArray.parseArray(strSpm);
-        List<SysPermission> sysPermissions = jsonSpm.toJavaList(SysPermission.class);
+        List<SysPermission> sysPermissions = sysPermissionService.findAll();
         for (SysPermission sysPermission : sysPermissions) {
             array = new ArrayList<>();
             //此处只添加了用户的名字，其实还可以添加更多权限的信息，例如请求方法到ConfigAttribute的集合中去。此处添加的信息将会作为MyAccessDecisionManager类的decide的第三个参数。

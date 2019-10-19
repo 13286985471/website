@@ -1,4 +1,4 @@
-package it.world.zuul;
+package it.world.auth;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

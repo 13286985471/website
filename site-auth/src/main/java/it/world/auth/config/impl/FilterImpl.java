@@ -1,4 +1,4 @@
-package it.world.zuul.config.impl;
+package it.world.auth.config.impl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
