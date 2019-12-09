@@ -7,7 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -58,7 +57,6 @@ public class OAuth2ServerConfig {
         @Autowired
         private UserDetailsService userDetailsService;
 
-        private BCryptPasswordEncoder bCryptPasswordEncoder;
 
         /*@Autowired
         RedisConnectionFactory redisConnectionFactory;*/
@@ -67,20 +65,22 @@ public class OAuth2ServerConfig {
         public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
             //配置两个客户端,一个用于password认证一个用于client认证
             clients.inMemory()
-                    .withClient("client_1")//
-                    .secret(bCryptPasswordEncoder.encode("12345"))//密钥
-                    .resourceIds(DEMO_RESOURCE_ID)//
+                    .withClient("client_1")//客户端
+                    .secret("{noop}123456")//密钥
+                    .resourceIds(DEMO_RESOURCE_ID)//资源id
                     .authorizedGrantTypes("client_credentials", "refresh_token")//密码授权模式和刷新令牌
                     .accessTokenValiditySeconds(72000) //有效时间 2小时
                     .scopes("select")//授权范围
-                    .authorities("client");
-                /*.and()
+                    .authorities("client")
+                 .and()
                     .withClient("client_2")
                     .resourceIds(DEMO_RESOURCE_ID)
                     .authorizedGrantTypes("password", "refresh_token")
+                    .accessTokenValiditySeconds(72000)
+                    .refreshTokenValiditySeconds(144000)
                     .scopes("select")
                     .authorities("client")
-                    .secret("123456");*/
+                    .secret("{noop}456");
         }
 
         @Override
