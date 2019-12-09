@@ -38,14 +38,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests().antMatchers(IgnoreUrls.url)
+            .authorizeRequests().antMatchers(IgnoreUrls.url)//不需要权限认证的url
             .permitAll().anyRequest().authenticated()
         .and()
             .formLogin().successHandler(loginSuccessHandler).failureHandler(loginFailureHandler)
+                //.loginProcessingUrl("/authentication/form")//登录需要经过的url请求*//*
         .and()
             .logout().logoutSuccessHandler(logoutSuccessHandler)
         .and()
-            .csrf().disable()
+            .csrf().disable()//关闭跨站请求防护
             .httpBasic();
     }
 
