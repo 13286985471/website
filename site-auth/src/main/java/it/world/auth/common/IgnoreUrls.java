@@ -5,10 +5,10 @@ package it.world.auth.common;
  */
 public interface IgnoreUrls {
     String[] url = {
-            "/",
             "/userlogin",
             "/error",
             "/authentication/form",
             "/adp",
+            "/oauth/**"
     };
 }

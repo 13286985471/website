@@ -104,7 +104,7 @@ public class WebSecurityHandlerConfig {
         try {
             m.put("ec", "0");
             UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) authentication;
-            m.putAll((Map) auth.getPrincipal());
+            auth.getPrincipal();
             userJson = new ObjectMapper().writeValueAsString(m);
         } catch (Exception e) {
             // TODO Auto-generated catch block

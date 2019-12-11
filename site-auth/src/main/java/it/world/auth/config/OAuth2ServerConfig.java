@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -15,16 +14,25 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 
 @Configuration
 @EnableAuthorizationServer
 public class OAuth2ServerConfig {
     private static final String DEMO_RESOURCE_ID = "order";
+    @Autowired
+    private  LogoutSuccessHandler logoutSuccessHandler;
+    @Autowired
+    private  AuthenticationFailureHandler loginFailureHandler;
+    @Autowired
+    private  AuthenticationSuccessHandler loginSuccessHandler;
 
     @Configuration
     @EnableResourceServer
-    protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+    protected  class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
         @Override
         public void configure(ResourceServerSecurityConfigurer resources) {
@@ -35,15 +43,16 @@ public class OAuth2ServerConfig {
         public void configure(HttpSecurity http) throws Exception {
             // @formatter:off
             http
-
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .and()
-                    .requestMatchers().anyRequest().antMatchers(IgnoreUrls.url)
-                .and()
-                    .anonymous()
-                .and()
-                    .authorizeRequests()
-                    .antMatchers(IgnoreUrls.url).authenticated();//配置order访问控制，必须认证过后才可以访问
+                    .authorizeRequests().antMatchers(IgnoreUrls.url)//不需要权限认证的url
+                    .permitAll().anyRequest().authenticated()
+                    .and()
+                    .formLogin().successHandler(loginSuccessHandler).failureHandler(loginFailureHandler)
+                    //.loginProcessingUrl("/authentication/form")//登录需要经过的url请求
+                    .and()
+                    .logout().logoutSuccessHandler(logoutSuccessHandler)
+                    .and()
+                    .csrf().disable()//关闭跨站请求防护
+                    .httpBasic();
             // @formatter:on
         }
     }
@@ -96,6 +105,8 @@ public class OAuth2ServerConfig {
             //允许表单认证
             oauthServer.allowFormAuthenticationForClients();
         }
+
+
 
     }
 }

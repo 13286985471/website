@@ -42,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
             .permitAll().anyRequest().authenticated()
         .and()
             .formLogin().successHandler(loginSuccessHandler).failureHandler(loginFailureHandler)
-                //.loginProcessingUrl("/authentication/form")//登录需要经过的url请求*//*
+                //.loginProcessingUrl("/authentication/form")//登录需要经过的url请求
         .and()
             .logout().logoutSuccessHandler(logoutSuccessHandler)
         .and()
