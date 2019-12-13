@@ -19,9 +19,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 
 @Configuration
@@ -31,13 +28,6 @@ public class OAuth2ServerConfig {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-    @Autowired
-    private  LogoutSuccessHandler logoutSuccessHandler;
-    @Autowired
-    private  AuthenticationFailureHandler loginFailureHandler;
-    @Autowired
-    private  AuthenticationSuccessHandler loginSuccessHandler;
 
     /**
      *设定授权的认证方式和信息

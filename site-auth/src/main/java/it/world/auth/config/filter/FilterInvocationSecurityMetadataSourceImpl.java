@@ -1,7 +1,7 @@
 package it.world.auth.config.filter;
 
 import it.world.auth.entity.SysPermission;
-import it.world.auth.service.SysPermissionService;
+import it.world.auth.feign.AuthFeign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -18,7 +18,7 @@ import java.util.*;
 public class FilterInvocationSecurityMetadataSourceImpl implements  FilterInvocationSecurityMetadataSource {
 
     @Autowired
-    private SysPermissionService sysPermissionService;
+    private AuthFeign authFeign;
 
     private HashMap<String, Collection<ConfigAttribute>> map =null;
 
@@ -29,7 +29,7 @@ public class FilterInvocationSecurityMetadataSourceImpl implements  FilterInvoca
         map = new HashMap<>();
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
-        List<SysPermission> permissions = sysPermissionService.findAll();
+        List<SysPermission> permissions = authFeign.queryAllPermission();
         for(SysPermission permission : permissions) {
             array = new ArrayList<>();
             cfg = new SecurityConfig(permission.getPmName());
