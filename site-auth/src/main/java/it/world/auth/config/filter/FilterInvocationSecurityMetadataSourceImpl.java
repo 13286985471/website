@@ -49,7 +49,8 @@ public class FilterInvocationSecurityMetadataSourceImpl implements  FilterInvoca
         HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
         AntPathRequestMatcher matcher;
         String resUrl;
-        for(Iterator<String> iter = map.keySet().iterator(); iter.hasNext(); ) {
+        Iterator<String> iter = map.keySet().iterator();
+        while (iter.hasNext()) {
             resUrl = iter.next();
             matcher = new AntPathRequestMatcher(resUrl);
             if(matcher.matches(request)) {
