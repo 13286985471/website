@@ -31,6 +31,8 @@
         <spring-cloud-starter-netflix-zuul>2.1.2.RELEASE</spring-cloud-starter-netflix-zuul>
         <spring-cloud-starter-feign>1.4.7.RELEASE</spring-cloud-starter-feign>
         <fastjson>1.2.60</fastjson>
+        <spring-cloud-starter-oauth2>2.1.4.RELEASE</spring-cloud-starter-oauth2>
+        <commons-collections>3.1</commons-collections>
     </properties>
 
     <dependencyManagement>
@@ -152,6 +154,17 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-oauth2</artifactId>
+                <version>${spring-cloud-starter-oauth2}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections}</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
@@ -166,8 +179,9 @@
 
     <modules>
         <module>site-eureka</module>
-        <module>site-zuul</module>
+        <module>site-gateway</module>
         <module>site-service</module>
+        <module>site-auth</module>
     </modules>
 
 </project>
