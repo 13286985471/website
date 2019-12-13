@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
+/**
+ * 写入权限
+ */
 public class UserDetailsImpl extends SysUser implements UserDetails {
 
     private static final long serialVersionUID = 1L;
@@ -35,6 +38,11 @@ public class UserDetailsImpl extends SysUser implements UserDetails {
                 List<SysPermission> permissions = role.getSysPermissions();
                 for (SysPermission permission :permissions) {
                     //为每个授权中心对象写入权限名
+                    //在Security看来角色和权限是一样的，它认证的时候，把所有权限（角色、权限）都取出来，而不是分开验证。
+                    //Security角色和权限共用authorities表
+                    //此时我还是给角色权限分开两个表，这样表可以通用shiro框架，此时hasRole()表达式对应权限名
+                    //分表后，权限名需加ROLE_开头，
+                    // 实际上操作的时候hasRole表达式，会判断参数是否包含"ROLE_"前缀，如果没有则加上去，然后再去校验。有这个前缀则直接校验。
                     pms.add(permission.getPmName());
                 }
             }

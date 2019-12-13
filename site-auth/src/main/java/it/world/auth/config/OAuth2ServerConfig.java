@@ -2,10 +2,15 @@ package it.world.auth.config;
 
 import it.world.auth.common.IgnoreUrls;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -23,12 +28,39 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 @EnableAuthorizationServer
 public class OAuth2ServerConfig {
     private static final String DEMO_RESOURCE_ID = "order";
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @Autowired
     private  LogoutSuccessHandler logoutSuccessHandler;
     @Autowired
     private  AuthenticationFailureHandler loginFailureHandler;
     @Autowired
     private  AuthenticationSuccessHandler loginSuccessHandler;
+
+    /**
+     *设定授权的认证方式和信息
+     * @return
+     */
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setHideUserNotFoundExceptions(false);
+        provider.setPasswordEncoder(new BCryptPasswordEncoder());
+        return provider;
+    }
+
+    @Configuration
+    public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+        @Bean
+        @Override
+        public AuthenticationManager authenticationManagerBean() throws Exception {
+            return super.authenticationManagerBean();
+        }
+
+    }
 
     @Configuration
     @EnableResourceServer
@@ -45,11 +77,6 @@ public class OAuth2ServerConfig {
             http
                     .authorizeRequests().antMatchers(IgnoreUrls.url)//不需要权限认证的url
                     .permitAll().anyRequest().authenticated()
-                    .and()
-                    .formLogin().successHandler(loginSuccessHandler).failureHandler(loginFailureHandler)
-                    //.loginProcessingUrl("/authentication/form")//登录需要经过的url请求
-                    .and()
-                    .logout().logoutSuccessHandler(logoutSuccessHandler)
                     .and()
                     .csrf().disable()//关闭跨站请求防护
                     .httpBasic();
@@ -81,7 +108,7 @@ public class OAuth2ServerConfig {
                     .accessTokenValiditySeconds(72000) //有效时间 2小时
                     .scopes("select")//授权范围
                     .authorities("client")
-                 .and()
+                .and()
                     .withClient("client_2")
                     .resourceIds(DEMO_RESOURCE_ID)
                     .authorizedGrantTypes("password", "refresh_token")
@@ -104,6 +131,8 @@ public class OAuth2ServerConfig {
         public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
             //允许表单认证
             oauthServer.allowFormAuthenticationForClients();
+            // 配置token获取合验证时的策略
+            oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
         }
 
 

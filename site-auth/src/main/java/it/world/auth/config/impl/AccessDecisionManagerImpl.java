@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
+/**
+ * 进行权限的校验
+ */
 @Service
 public class AccessDecisionManagerImpl implements AccessDecisionManager {
     /**
@@ -38,6 +41,7 @@ public class AccessDecisionManagerImpl implements AccessDecisionManager {
                 }
             }
         }
+        //用户无权限则直接抛出
         throw new AccessDeniedException("no permission");
     }
 

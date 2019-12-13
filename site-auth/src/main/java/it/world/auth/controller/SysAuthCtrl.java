@@ -40,7 +40,7 @@ public class SysAuthCtrl {
         return sysUserService.findUserByName(username);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_LEVEL1')")
     @RequestMapping("/order/{username}")
     @ResponseBody
     public SysUser order(@PathVariable("username") String username){
