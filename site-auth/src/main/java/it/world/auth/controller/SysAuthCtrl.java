@@ -2,7 +2,6 @@ package it.world.auth.controller;
 
 import it.world.auth.entity.SysUser;
 import it.world.auth.feign.AuthFeign;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
