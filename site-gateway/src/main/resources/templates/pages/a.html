@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>test</title>
+    <script src="jquery-1.12.4.js"></script>
+    <script src="Base64.js"/></script>
+    <script type="text/javascript">
+
+    var access_token="";
+    var refresh_token="";
+    var token_type ="";
+    function logout(){
+        var auth=token_type+access_token ;
+        $("#aa").html("");
+        $.ajax
+        ({
+            type: "POST",
+            url: "/fanhua-auth/logout.do",
+            // url: "/auth/oauth/token?grant_type=password",
+            contentType : "application/x-www-form-urlencoded; charset=utf-8",
+            async: false,
+            success: function (d){
+                $("#aa").html(JSON.stringify(d));
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", auth);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                document.getElementById("aa").innerHTML=XMLHttpRequest.status+','+XMLHttpRequest.readyState+', '+textStatus;
+            }
+        });
+    }
+
+    function login_session(){
+        $("#aa").html("");
+        $.ajax
+        ({
+            type: "POST",
+            url: "/fanhua-auth/login.do",
+            // url: "/auth/oauth/token?grant_type=password",
+            contentType : "application/x-www-form-urlencoded; charset=utf-8",
+            data:$("#form1").serialize(),
+            async: false,
+            success: function (d){
+                $("#aa").html(JSON.stringify(d));
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $("#aa").html(XMLHttpRequest.status+','+XMLHttpRequest.readyState+', '+textStatus);
+            }
+        });
+    }
+
+    function login_oauth2(){
+        $("#aa").html("");
+        var auth=make_basic_auth ($("#client").val() ,$("#client-secret").val() );
+        $.ajax
+        ({
+            type: "POST",
+            url: "/fanhua-auth/oauth/token",
+            // url: "/auth/oauth/token?grant_type=password",
+            contentType :"application/json; charset=utf-8", //"application/x-www-form-urlencoded; charset=utf-8",
+            data:JSON.stringify($("#form1").serialize()),
+            async: false,
+            success: function (d){
+                $("#aa").html(JSON.stringify(d));
+                access_token=d.access_token;
+                refresh_token=d.refresh_token;
+                token_type =d.token_type ;
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", auth);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $("#aa").html(XMLHttpRequest.status+','+XMLHttpRequest.readyState+', '+textStatus);
+            }
+        });
+    }
+
+    function refresh_oauth2(){
+        $("#aa").html("");
+        var auth=	make_basic_auth ($("#client").val() ,$("#client-secret").val() );
+        $.ajax
+        ({
+            type: "POST",
+            url: "/fanhua-auth/oauth/token?grant_type=refresh_token&refresh_token="+refresh_token,
+            // url: "/auth/oauth/token?grant_type=password",
+            contentType : "application/x-www-form-urlencoded; charset=utf-8",
+            //data:$("#form1").serialize(),
+            async: false,
+            success: function (d){
+                $("#aa").html(JSON.stringify(d));
+                access_token=d.access_token;
+                refresh_token=d.refresh_token;
+                token_type =d.token_type ;
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", auth);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $("#aa").html(XMLHttpRequest.status+','+XMLHttpRequest.readyState+', '+textStatus);
+            }
+        });
+    }
+
+    function query(){
+        $("#aa").html("");
+        $.ajax
+        ({
+            type: "POST",
+            url: "/fanhua-service/getUser/2",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(GetJsonData()),
+            async: false,
+            success: function (d){
+                $("#aa").html(JSON.stringify(d));
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $("#aa").html(XMLHttpRequest.status+','+XMLHttpRequest.readyState+', '+textStatus);
+            }
+        });
+    }
+
+    function query_oauth2(){
+        $("#aa").html("");
+        var auth=token_type+access_token ;
+        $.ajax
+        ({
+            type: "POST",
+            //url: "/fanhua-service/login.do",
+            url: "/service/userLogin.do",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(GetJsonData()),
+            async: false,
+            success: function (d){
+                $("#aa").html(JSON.stringify(d));
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", auth);
+                xhr.setRequestHeader("uuid",$("#uuid").val());
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $("#aa").html(XMLHttpRequest.status+','+XMLHttpRequest.readyState+', '+textStatus);
+            }
+        });
+    }
+    function redisPut(){
+        $("#aa").html("");
+        $.ajax
+        ({
+            type: "POST",
+            url: "/fanhua-service/redisPut.do",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({"channelId": "123","userId": "4433","userName": "黎明","currentBusinessCode":"22"}),
+            async: false,
+            success: function (d){
+                $("#aa").html(JSON.stringify(d));
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $("#aa").html(XMLHttpRequest.status+','+XMLHttpRequest.readyState+', '+textStatus);
+            }
+        });
+    }
+    function redisGet(){
+        $("#aa").html("");
+        $.ajax
+        ({
+            type: "POST",
+            url: "/fanhua-service/redisGet.do",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({"userId": "4433","channelId": "123"}),
+            async: false,
+            success: function (d){
+                $("#aa").html(JSON.stringify(d));
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $("#aa").html(XMLHttpRequest.status+','+XMLHttpRequest.readyState+', '+textStatus);
+            }
+        });
+    }
+    function sendMsg(){
+        $("#aa").html("");
+        $.ajax
+        ({
+            type: "POST",
+            url: "/fanhua-service/sendMsg.do",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({"channelId": "123","userId": "4444","userName": "黎明"}),
+            async: false,
+            success: function (d){
+                $("#aa").html(JSON.stringify(d));
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $("#aa").html(XMLHttpRequest.status+','+XMLHttpRequest.readyState+', '+textStatus);
+            }
+        });
+    }
+    function GetJsonData() {
+        var json = {
+            /* "channelId": "123",
+            "currentBusinessCode": "2222", */
+            "userJobNum": $("#username").val(),
+            "pwdType": "0",
+            "userPwd": "qqqqqqqqqq",
+            "gesturePwd": ""
+        };
+        return json;
+    }
+
+
+    function GetLoginJsonData() {
+        var json = {
+            "grant_type":"password",
+            "username":$("#username").val(),
+            "password":$("#password").val(),
+            "client":$("#client").val(),
+            "client-secret":$("#client-secret").val(),
+            "authtype":$("#authtype").val(),
+            "pwdType":"0",
+            "uuid":"123321123-111"
+        };
+        return json;
+    }
+
+    function make_basic_auth(user, password) {
+        var tok = user + ':' + password;
+        var hash = Base64.encode(tok);
+        return "Basic " + hash;
+    }
+
+
+    function guid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            return v.toString(16);
+        });
+    }
+    </script>
+</head>
+<body>
+
+<form name="form1" id="form1" method="POST" action="/login/login" >
+    userName:   <input type="text" name="username" value="450821198808181453" id="username" class="text"/>
+    password:    <input type="password" name="password" value="123456" id="password" class="text"/>
+
+    <input type="hidden" name="client" id="client" value="client1"/><!--客户端ID，oauth2使用 -->
+    <input type="hidden" name="client-secret" id="client-secret" value="123456"/><!--客户端密钥，oauth2使用 -->
+
+    <br><br>
+
+    <input  type="hidden"     name="deviceID" id="deviceID"  /><!--手机号或设备标识，随机数等，验证码使用 -->
+    验证码： <input type="text" name="validCode" id="validCode"  /><!--验证码 -->
+    <img class="login-captcha" src="#"  >
+    <br><br>
+
+    <input type="hidden" name="authtype" id="authtype" value="app"/>
+
+    <input type="hidden" name="uuid" id="uuid" value="1234321"/>
+    <input type="hidden" name="pwdType" id="pwdType" value="0"/>
+    <!--  <input type="hidden" name="currentBusinessCode" id="currentBusinessCode" value="1234321"/> -->
+    <input type="button"  onClick="login_session()" name="sub" value="登陆(session)" class="page"/>
+    <input type="button"  onClick="login_oauth2()" name="sub" value="登陆(oauth2)" class="page"/>
+    <input type="button"  onClick="refresh_oauth2()" name="sub" value="登陆(refresh_oauth2)" class="page"/>
+
+    <input type="button"  onClick="logout()" name="sub" value="退出(session/oauth2)" class="page"/>
+    <input type="button"  onClick="query()" name="sub" value="查询用户(session)" class="page"/>
+
+    <input type="button"  onClick="query_oauth2()" name="sub" value="查询用户(oauth2)" class="page"/>
+
+
+    <input type="button"  onClick="redisPut()" name="sub" value="添加缓存(session)" class="page"/>
+    <input type="button"  onClick="redisGet()" name="sub" value="获取缓存(session)" class="page"/>
+    <input type="button"  onClick="sendMsg()" name="sub" value="发送消息(session)" class="page"/>
+
+    <br>
+    <font size=-1>注意：需要在gateway配置文件上指定请求路径是session认证方式还是oauth2认证方式</font>
+</form>
+<br><hr>
+<div id="aa" name="aa"></div>
+</body>
+
+<script type="text/javascript">
+
+    var uuid = guid();
+
+    $("input[name='deviceID']").val(uuid)
+    // 图形验证码
+    $('.login-captcha').attr("src", "/fanhua-auth/code/"+uuid);
+    $('.login-captcha').attr("style", "");
+
+    // 图形验证码
+    $('.login-captcha').click(function () {
+        this.src = this.src + '?t=' + (new Date).getTime();
+    });
+</script>
+</html>
