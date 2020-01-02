@@ -1,9 +1,11 @@
 package it.world.auth.config;
 
 import it.world.auth.common.IgnoreUrls;
+import it.world.auth.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -11,18 +13,25 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Configuration
-@EnableAuthorizationServer
 public class OAuth2ServerConfig {
     private static final String DEMO_RESOURCE_ID = "order";
 
@@ -44,6 +53,12 @@ public class OAuth2ServerConfig {
 
     @Configuration
     public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+        /**
+         * 这一步的配置是必不可少的，否则SpringBoot会自动配置一个AuthenticationManager,覆盖掉内存中的用户
+         * 不定义没有password grant_type
+         */
+
         @Bean
         @Override
         public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -75,7 +90,6 @@ public class OAuth2ServerConfig {
     }
 
     @Configuration
-    @EnableAuthorizationServer
     protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
         @Autowired
@@ -96,7 +110,7 @@ public class OAuth2ServerConfig {
                     .resourceIds(DEMO_RESOURCE_ID)//资源id
                     .authorizedGrantTypes("client_credentials", "refresh_token")//密码授权模式和刷新令牌
                     .accessTokenValiditySeconds(72000) //有效时间 2小时
-                    .scopes("select")//授权范围
+                    .scopes("select")//授权范围,此处的scopes是无用的，可以随意设置
                     .authorities("client")
                 .and()
                     .withClient("client_2")
@@ -111,10 +125,16 @@ public class OAuth2ServerConfig {
 
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+            TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+            tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
             endpoints
-                    /*.tokenStore(new RedisTokenStore(redisConnectionFactory))*/
+                    .tokenEnhancer(tokenEnhancerChain)
+                    .accessTokenConverter(accessTokenConverter())
                     .authenticationManager(authenticationManager)
-                    .userDetailsService(userDetailsService);
+                    .userDetailsService(userDetailsService)
+                    //允许 GET、POST 请求获取 token，即访问端点：oauth/token
+                    .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
+            endpoints.reuseRefreshTokens(true);//oauth2登录异常处理
         }
 
         @Override
@@ -122,10 +142,39 @@ public class OAuth2ServerConfig {
             //允许表单认证
             oauthServer.allowFormAuthenticationForClients();
             // 配置token获取合验证时的策略
-            oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
+            oauthServer.tokenKeyAccess("hasPermission()").checkTokenAccess("isAuthenticated()");
         }
 
+        /**
+         * @Author Pan Weilong
+         * @Description jwt加密秘钥
+         * @Date 17:58 2019/7/10
+         **/
+        @Bean
+        public JwtAccessTokenConverter accessTokenConverter() {
+            JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+            converter.setSigningKey(DEMO_RESOURCE_ID);
+            return converter;
+        }
 
-
+        /**
+         * jwt 生成token 定制化处理
+         * @return TokenEnhancer
+         */
+        @Bean
+        public TokenEnhancer tokenEnhancer() {
+            return (accessToken, authentication) -> {
+                SysUser user = (SysUser) authentication.getUserAuthentication().getPrincipal();
+                final Map<String, Object> additionalInfo = new HashMap<>(1);
+                additionalInfo.put("license", DEMO_RESOURCE_ID);
+                additionalInfo.put("userId" , user.getId());
+                ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
+                //设置token的过期时间30分钟
+                Calendar nowTime = Calendar.getInstance();
+                nowTime.add(Calendar.MINUTE, 30);
+                ((DefaultOAuth2AccessToken) accessToken).setExpiration(nowTime.getTime());
+                return accessToken;
+            };
+        }
     }
 }

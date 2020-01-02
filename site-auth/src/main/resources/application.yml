@@ -15,6 +15,12 @@ spring:
     prefix: classpath:templates/
     suffix: .html
     encoding: utf-8
+security:
+  oauth2:
+    resource:
+      id: resource
+      user-info-uri: http://oauth/user
+      loadBalanced: true
 
 logging:
   level:

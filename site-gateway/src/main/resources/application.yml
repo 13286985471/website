@@ -4,29 +4,71 @@ server:
 spring:
   application:
     name: site-gateway
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: false
-      routes:
-        - id: auth
-          uri: lb://SITE-AUTH
-          predicates:
-            - Path=/auth/**
-          filters:
-            - StripPrefix=1
-        - id: service
-          uri: lb://SITE-SERVICE
-          predicates:
-            - Path=/service/**
-          filters:
-            - StripPrefix=1
+  devtools:
+    restart:
+      enabled: true
+  thymeleaf:
+    prefix: classpath:templates/
+    suffix: .html
+    encoding: utf-8
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: false
+#      routes:
+#        - id: auth
+#          uri: lb://SITE-AUTH
+#          predicates:
+#            - Path=/auth/**
+#          filters:
+#            - StripPrefix=1
+#        - id: service
+#          uri: lb://SITE-SERVICE
+#          predicates:
+#            - Path=/service/**
+#          filters:
+#            - StripPrefix=1
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+zuul:
+  host:
+    connect-timeout-millis: 10000
+    socket-timeout-millis: 60000
+  #添加代理头
+  add-proxy-headers: true
+  retryable: true
+  set-content-length: true
+  sensitive-headers:
+  routes:
+    service:
+      path: /service/**
+      serviceId: site-service
+      #过滤客户端附带的headers
+      sensitiveHeaders: "*"
+    auth:
+      path: /uaa/**
+      serviceId: site-auth
+      strip-prefix: true
+      #zuul默认对转发的request，会把header清空，为了传递原始的header信息到最终的微服务，要设置一下属性
+      custom-sensitive-headers: true
 
+#安全配置
+security:
+  auth2:
+    server: http://127.0.0.1:8090
+  oauth2:
+    client:
+      client-id: client_2
+      client-secret: 456
+    resource:
+      loadBalanced: true
+      token-info-uri:  ${security.auth2.server}/oauth/check_token #auth服务中验证token
+      #jwt:
+        #key-uri: ${security.auth.server}/oauth/token_key #解析jwt令牌所需要密钥的地址
 logging:
   level:
-    root: debug
+    root: info
+

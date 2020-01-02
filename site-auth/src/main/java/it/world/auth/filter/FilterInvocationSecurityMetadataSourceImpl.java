@@ -1,4 +1,4 @@
-package it.world.auth.config.filter;
+package it.world.auth.filter;
 
 import it.world.auth.entity.SysPermission;
 import it.world.auth.feign.AuthFeign;

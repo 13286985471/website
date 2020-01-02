@@ -1,7 +1,7 @@
 package it.world.gateway.common;
 
 /**
- *不需要登录授权的url
+ *不需要授权的url
  */
 public interface IgnoreUrls {
     String[] url = {
@@ -11,6 +11,7 @@ public interface IgnoreUrls {
             "/authentication/form",
             "/adp",
             "/login",
-            "/auth/**"
+            "/uaa/**",
+            "/oauth/**"
     };
 }

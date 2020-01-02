@@ -1,4 +1,4 @@
-package it.world.auth.config.filter;
+package it.world.auth.filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDecisionManager;

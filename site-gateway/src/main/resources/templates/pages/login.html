@@ -1,18 +1,48 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<meta charset="UTF-8">
+	<title>Title</title>
 </head>
 <body>
-	<h1 align="center">欢迎登陆武林秘籍管理系统</h1>
-	<hr>
-	<div align="center">
-		<form action="" method="post">
-			用户名:<input name="username"/><br>
-			密  码:<input name="password"><br/>
-			<input type="submit" value="登陆">
-		</form>
-	</div>
+<input id="username" value="admin">
+<h1 onclick="login()"><button>登录</button></h1>
+<div><input type="text" id="url" value="http://localhost:7900/"></div>
+<button onclick="query()">开始</button>
 </body>
+
 </html>
+<script>
+	var accessToken;
+	function login() {
+		var username=$("#username").val();
+		$.ajax
+		({
+			type: "POST",
+			timeout : 3000, //超时时间设置，单位毫秒
+			url: "http://localhost:8050/uaa/oauth/token?grant_type=password&scope=select&client_id=client_2&client_secret=456&password=123456&username="+username,
+			async: false,
+			success: function (d){
+				console.log(JSON.stringify(d));
+				accessToken=d.access_token;
+			}
+		});
+
+	}
+	function query() {
+		var url=$("#url").val();
+		console.log(url)
+		$.ajax
+		({
+			type: "POST",
+			timeout : 3000, //超时时间设置，单位毫秒
+			url: url+"?access_token="+accessToken,
+			async: false,
+			success: function (d){
+				console.log(JSON.stringify(d));
+			}
+		});
+
+	}
+</script>

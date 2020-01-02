@@ -32,4 +32,8 @@ public class UserInfoCtrl {
     public SysUser queryUser(@PathVariable("username") String username) {
         return sysUserService.findUserByName(username);
     }
+    @RequestMapping("/admin/{username}")
+    public SysUser admin(@PathVariable("username") String username) {
+        return sysUserService.findUserByName(username);
+    }
 }

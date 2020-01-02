@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.security.Principal;
+
 @Controller
 public class SysAuthCtrl {
     private final String PREFIX = "pages/";
@@ -27,4 +29,9 @@ public class SysAuthCtrl {
         return authFeign.queryUser(username);
     }
 
+    @RequestMapping("/oauth/user")
+    @ResponseBody
+    public Principal user(Principal user) {
+        return user;
+    }
 }
