@@ -8,10 +8,10 @@
         <version>1.0</version>
     </parent>
 
-    <groupId>it.world.eureka</groupId>
-    <artifactId>site-eureka</artifactId>
+    <groupId>it.world.registry</groupId>
+    <artifactId>site-registry</artifactId>
     <version>1.0</version>
-    <name>site-eureka</name>
+    <name>site-registry</name>
     <description>registry</description>
     <packaging>jar</packaging>
 
