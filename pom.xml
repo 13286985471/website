@@ -81,7 +81,7 @@
     </build>
 
     <modules>
-        <module>site-eureka</module>
+        <module>site-registry</module>
         <module>site-gateway</module>
         <module>site-service</module>
         <module>site-auth</module>
