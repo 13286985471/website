@@ -7,14 +7,24 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 
-
+/**
+ * 此处拦截，是为了对access_token进行检验。
+ * RESOURCE_ID要与鉴权中心的RESOURCE_ID
+ * 鉴权中心/oauth/check_token，该接口检验access_token
+ *
+ */
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
-    private static final String DEMO_RESOURCE_ID = "order";
+    private static final String RESOURCE_ID;
+
+    static {
+        RESOURCE_ID = "order";
+    }
+
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
-        resources.resourceId(DEMO_RESOURCE_ID).stateless(true);
+        resources.resourceId(RESOURCE_ID).stateless(true);
     }
 
     @Override
