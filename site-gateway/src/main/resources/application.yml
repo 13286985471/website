@@ -68,6 +68,7 @@ security:
       token-info-uri:  ${security.auth2.server}/oauth/check_token #auth服务中验证token
       #jwt:
         #key-uri: ${security.auth.server}/oauth/token_key #解析jwt令牌所需要密钥的地址
+      user-info-uri:
 logging:
   level:
     root: info
