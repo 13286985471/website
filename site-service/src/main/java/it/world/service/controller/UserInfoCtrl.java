@@ -1,7 +1,8 @@
 package it.world.service.controller;
 
-import it.world.service.entity.SysPermission;
-import it.world.service.entity.SysUser;
+
+import it.world.common.entity.SysPermission;
+import it.world.common.entity.SysUser;
 import it.world.service.service.SysPermissionService;
 import it.world.service.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;

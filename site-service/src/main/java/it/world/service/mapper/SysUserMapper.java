@@ -1,6 +1,7 @@
 package it.world.service.mapper;
 
-import it.world.service.entity.SysUser;
+
+import it.world.common.entity.SysUser;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

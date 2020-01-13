@@ -1,7 +1,7 @@
 package it.world.service.mapper;
 
 
-import it.world.service.entity.SysRole;
+import it.world.common.entity.SysRole;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
