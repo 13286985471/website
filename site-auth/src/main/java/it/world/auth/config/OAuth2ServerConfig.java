@@ -1,6 +1,5 @@
 package it.world.auth.config;
 
-import it.world.common.dataDic.IgnoreUrls;
 import it.world.common.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,14 +8,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
@@ -68,7 +65,6 @@ public class OAuth2ServerConfig {
     }
 
     @Configuration
-    @EnableResourceServer
     protected  class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
         @Override
@@ -76,18 +72,6 @@ public class OAuth2ServerConfig {
             resources.resourceId(DEMO_RESOURCE_ID).stateless(true);
         }
 
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-
-            // @formatter:off
-            http
-                    .authorizeRequests().antMatchers(IgnoreUrls.url)//不需要权限认证的url
-                    .permitAll().anyRequest().authenticated()
-                    .and()
-                    .csrf().disable()//关闭跨站请求防护
-                    .httpBasic();
-            // @formatter:on
-        }
     }
 
     @Configuration
