@@ -1,6 +1,7 @@
 package it.world.service.controller;
 
 
+import it.world.common.dataDic.RespBody;
 import it.world.common.entity.SysPermission;
 import it.world.common.entity.SysUser;
 import it.world.service.service.SysPermissionService;
@@ -34,7 +35,7 @@ public class UserInfoCtrl {
         return sysUserService.findUserByName(username);
     }
     @RequestMapping("/admin/{username}")
-    public SysUser admin(@PathVariable("username") String username) {
-        return sysUserService.findUserByName(username);
+    public RespBody admin(@PathVariable("username") String username) {
+        return new RespBody(sysUserService.findUserByName(username));
     }
 }

@@ -36,7 +36,7 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 mybatis:
   mapper-locations: classpath:mapping/*.xml
-  type-aliases-package: it.world.service.entity
+  type-aliases-package: it.world.common.entity
   configuration:
     map-underscore-to-camel-case: true
 

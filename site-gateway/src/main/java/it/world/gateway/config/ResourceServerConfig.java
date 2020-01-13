@@ -1,6 +1,6 @@
 package it.world.gateway.config;
 
-import it.world.common.dataDic.IgnoreUrls;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,8 +18,9 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 @EnableResourceServer
 @EnableOAuth2Sso
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
+    @Autowired
+    private Properties properties;
     private static final String RESOURCE_ID;
-
     static {
         RESOURCE_ID = "order";
     }
@@ -32,7 +33,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests().antMatchers(IgnoreUrls.url)//不需要权限认证的url
+                .authorizeRequests().antMatchers(properties.ignoreUrls)//不需要权限认证的url
                 .permitAll().anyRequest().authenticated()
                 .and()
                 .csrf().disable()//关闭跨站请求防护

@@ -29,6 +29,21 @@ spring:
 #            - Path=/service/**
 #          filters:
 #            - StripPrefix=1
+
+
+properties:
+  #不拦截的Url
+  ignoreUrls:
+    - "/"
+    - "/userlogin"
+    - "/error"
+    - "/authentication/form"
+    - "/adp"
+    - "/login"
+    - "/uaa/**"
+    - "/oauth/**"
+
+
 eureka:
   client:
     service-url:
