@@ -1,6 +1,7 @@
 package it.world.gateway.config;
 
-import it.world.gateway.common.IgnoreUrls;
+import it.world.common.dataDic.IgnoreUrls;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -15,6 +16,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
  */
 @Configuration
 @EnableResourceServer
+@EnableOAuth2Sso
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     private static final String RESOURCE_ID;
 

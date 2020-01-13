@@ -51,6 +51,11 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
         </dependency>
+        <dependency>
+            <groupId>it.world</groupId>
+            <artifactId>site-common</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

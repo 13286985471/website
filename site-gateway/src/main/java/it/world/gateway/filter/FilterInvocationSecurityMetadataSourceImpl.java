@@ -1,6 +1,7 @@
 package it.world.gateway.filter;
 
-import it.world.gateway.entity.SysPermission;
+
+import it.world.common.entity.SysPermission;
 import it.world.gateway.feign.AuthFeign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;

@@ -1,7 +1,8 @@
 package it.world.auth.feign;
 
-import it.world.auth.entity.SysPermission;
-import it.world.auth.entity.SysUser;
+
+import it.world.common.entity.SysPermission;
+import it.world.common.entity.SysUser;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

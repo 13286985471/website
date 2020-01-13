@@ -1,7 +1,7 @@
 package it.world.auth.config;
 
-import it.world.auth.common.IgnoreUrls;
-import it.world.auth.entity.SysUser;
+import it.world.common.dataDic.IgnoreUrls;
+import it.world.common.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -78,6 +78,7 @@ public class OAuth2ServerConfig {
 
         @Override
         public void configure(HttpSecurity http) throws Exception {
+
             // @formatter:off
             http
                     .authorizeRequests().antMatchers(IgnoreUrls.url)//不需要权限认证的url
