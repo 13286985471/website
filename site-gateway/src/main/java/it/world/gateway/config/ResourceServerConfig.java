@@ -1,5 +1,7 @@
 package it.world.gateway.config;
 
+import it.world.gateway.config.impl.AuthExceptionEntryPoint;
+import it.world.gateway.config.impl.CustomAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Configuration;
@@ -22,16 +24,28 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     private Properties properties;
     private static final String RESOURCE_ID;
     static {
+        /*
+         * 与鉴权中心一致
+         */
         RESOURCE_ID = "order";
     }
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
-        resources.resourceId(RESOURCE_ID).stateless(true);
+        resources
+                .resourceId(RESOURCE_ID).stateless(true)
+                .authenticationEntryPoint(new AuthExceptionEntryPoint())
+                .accessDeniedHandler(new CustomAccessDeniedHandler());
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
+        /*
+         * 传递 token 三种方式
+         * 1.请求时添加Authorization header=> Authorization : Bearer xxxxx
+         * 2.请求地址添加参数access_token=> /api/a?access_token=xxxxx
+         * 3.cookie方式 添加access_token=> access_token=xxxxx
+         */
         http
                 .authorizeRequests().antMatchers(properties.ignoreUrls)//不需要权限认证的url
                 .permitAll().anyRequest().authenticated()
