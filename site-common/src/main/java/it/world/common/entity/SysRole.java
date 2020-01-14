@@ -1,15 +1,11 @@
 package it.world.common.entity;
 
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.util.List;
 
-@Getter
-@Setter
-@ToString
+@Data
 public class SysRole {
 
   private long id;

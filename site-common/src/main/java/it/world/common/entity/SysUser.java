@@ -1,16 +1,12 @@
 package it.world.common.entity;
 
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
 
-@Getter
-@Setter
-@ToString
+@Data
 public class SysUser implements Serializable {
 
   private static final long serialVersionUID = -4392052022219864593L;
