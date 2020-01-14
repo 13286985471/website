@@ -80,6 +80,7 @@
         <module>site-service</module>
         <module>site-auth</module>
         <module>site-common</module>
+        <module>site-scheduler</module>
     </modules>
 
 </project>
