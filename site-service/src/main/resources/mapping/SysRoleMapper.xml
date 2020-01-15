@@ -12,7 +12,7 @@
         </collection>
     </resultMap>
     <select id="findRoleById" resultMap="roles">
-        select sr.id, sr.role_name,sp.id,sp.pm_name ,sp.description,sp.url,sp.pid from sys_role sr
+        select sr.id, sr.role_name,sp.pm_name ,sp.description,sp.url,sp.pid from sys_role sr
         left join sys_permission_role spr on(sr.id=spr.sys_role_id)
         left join sys_permission sp on (spr.sys_permission_id=sp.id)
         where sr.id=#{id}
