@@ -155,6 +155,7 @@ public class OAuth2ServerConfig {
                 for(SysRole role:roles){
                     roleNames.add(role.getRoleName());
                 }
+                additionalInfo.put("state" , true);
                 additionalInfo.put("userid" , user.getId());
                 additionalInfo.put("headImgUrl" , user.getHeadImgUrl());
                 additionalInfo.put("roles" , roleNames);
