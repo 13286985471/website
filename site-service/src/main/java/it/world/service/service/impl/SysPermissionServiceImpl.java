@@ -1,7 +1,7 @@
 package it.world.service.service.impl;
 
 
-import it.world.common.entity.SysPermission;
+import it.world.service.entity.SysPermission;
 import it.world.service.mapper.SysPermissionMapper;
 import it.world.service.service.SysPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package it.world.auth.config.impl;
 
 
+import it.world.auth.entity.SysUser;
 import it.world.auth.feign.AuthFeign;
-import it.world.common.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

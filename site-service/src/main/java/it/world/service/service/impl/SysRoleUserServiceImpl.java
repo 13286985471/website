@@ -1,8 +1,8 @@
 package it.world.service.service.impl;
 
 
-import it.world.common.entity.SysRoleUser;
-import it.world.common.entity.SysUser;
+import it.world.service.entity.SysRoleUser;
+import it.world.service.entity.SysUser;
 import it.world.service.mapper.SysRoleUserMapper;
 import it.world.service.service.SysRoleUserService;
 import org.springframework.beans.factory.annotation.Autowired;

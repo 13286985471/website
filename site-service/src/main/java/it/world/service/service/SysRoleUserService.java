@@ -1,8 +1,8 @@
 package it.world.service.service;
 
 
-import it.world.common.entity.SysRoleUser;
-import it.world.common.entity.SysUser;
+import it.world.service.entity.SysRoleUser;
+import it.world.service.entity.SysUser;
 
 public interface SysRoleUserService {
     SysRoleUser findRoleIdsByUserId(SysUser user);

@@ -21,7 +21,7 @@
     </resultMap>
 
     <select id="findByUsername" resultMap="user">
-        select su.id, username, password,head_img_url,sr.id srid, role_name,sp.id spid, pm_name, description, url, pid
+        select su.id, username, password,head_img_url,sr.id srid, role_name,sr.description srDescription,sp.id spid, pm_name, sp.description spDescription, url, pid
         from sys_user su
         left join sys_role_user sru
         on (su.id=sru.sys_user_id)
@@ -33,5 +33,8 @@
         on spr.sys_permission_id=sp.id
         where su.username=#{username}
     </select>
-
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="SysUser">
+        insert into sys_user (username, password,created_time)
+        values (#{username},#{password},now())
+    </insert>
 </mapper>

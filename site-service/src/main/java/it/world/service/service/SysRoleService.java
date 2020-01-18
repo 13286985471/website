@@ -1,7 +1,7 @@
 package it.world.service.service;
 
 
-import it.world.common.entity.SysRole;
+import it.world.service.entity.SysRole;
 
 import java.util.List;
 

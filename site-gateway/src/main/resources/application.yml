@@ -34,13 +34,9 @@ spring:
 properties:
   #不拦截的Url
   ignoreUrls:
-    - "/userlogin"
     - "/error"
-    - "/authentication/form"
-    - "/adp"
-    - "/login"
     - "/uaa/**"
-    - "/oauth/**"
+    - "/service/userInfo/register"
 
 
 eureka:
