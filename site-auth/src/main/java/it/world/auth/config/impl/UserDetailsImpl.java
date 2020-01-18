@@ -19,8 +19,10 @@ public class UserDetailsImpl extends SysUser implements UserDetails {
 
     public UserDetailsImpl(SysUser user) {
         if (user != null) {
+            this.setId(user.getId());
             this.setUsername(user.getUsername());
             this.setPassword(user.getPassword());
+            this.setHeadImgUrl(user.getHeadImgUrl());
             this.setRoles(user.getRoles());
         }
     }

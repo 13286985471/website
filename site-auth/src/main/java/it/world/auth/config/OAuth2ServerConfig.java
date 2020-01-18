@@ -1,5 +1,6 @@
 package it.world.auth.config;
 
+import it.world.common.entity.SysRole;
 import it.world.common.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,10 +24,7 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Configuration
@@ -39,7 +38,6 @@ public class OAuth2ServerConfig {
      *设定授权的认证方式和信息
      * @return
      */
-    @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
@@ -55,13 +53,15 @@ public class OAuth2ServerConfig {
          * 这一步的配置是必不可少的，否则SpringBoot会自动配置一个AuthenticationManager,覆盖掉内存中的用户
          * 不定义没有password grant_type
          */
-
         @Bean
         @Override
         public AuthenticationManager authenticationManagerBean() throws Exception {
             return super.authenticationManagerBean();
         }
-
+        @Override
+        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+            auth.authenticationProvider(authenticationProvider());
+        }
     }
 
     @Configuration
@@ -127,7 +127,7 @@ public class OAuth2ServerConfig {
             //允许表单认证
             oauthServer.allowFormAuthenticationForClients();
             // 配置token获取合验证时的策略
-            oauthServer.tokenKeyAccess("hasPermission()").checkTokenAccess("isAuthenticated()");
+            oauthServer.tokenKeyAccess("isAuthenticated()").checkTokenAccess("permitAll()");
         }
 
         /**
@@ -151,13 +151,15 @@ public class OAuth2ServerConfig {
             return (accessToken, authentication) -> {
                 SysUser user = (SysUser) authentication.getUserAuthentication().getPrincipal();
                 final Map<String, Object> additionalInfo = new HashMap<>(1);
-                additionalInfo.put("license", DEMO_RESOURCE_ID);
-                additionalInfo.put("userId" , user.getId());
+                List<SysRole> roles=user.getRoles();
+                List<String> roleNames=new ArrayList<>();
+                for(SysRole role:roles){
+                    roleNames.add(role.getRoleName());
+                }
+                additionalInfo.put("userid" , user.getId());
+                additionalInfo.put("headImgUrl" , user.getHeadImgUrl());
+                additionalInfo.put("roles" , roleNames);
                 ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
-                //设置token的过期时间30分钟
-                Calendar nowTime = Calendar.getInstance();
-                nowTime.add(Calendar.MINUTE, 30);
-                ((DefaultOAuth2AccessToken) accessToken).setExpiration(nowTime.getTime());
                 return accessToken;
             };
         }
