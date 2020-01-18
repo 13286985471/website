@@ -1,5 +1,6 @@
 package it.world.auth.config;
 
+import it.world.auth.exception.BootOAuth2WebResponseExceptionTranslator;
 import it.world.common.entity.SysRole;
 import it.world.common.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +120,9 @@ public class OAuth2ServerConfig {
                     .userDetailsService(userDetailsService)
                     //允许 GET、POST 请求获取 token，即访问端点：oauth/token
                     .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
-            endpoints.reuseRefreshTokens(true);//oauth2登录异常处理
+            endpoints.reuseRefreshTokens(true);
+            //oauth2登录异常处理
+            endpoints.exceptionTranslator(new BootOAuth2WebResponseExceptionTranslator());
         }
 
         @Override
