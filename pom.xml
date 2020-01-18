@@ -20,6 +20,7 @@
         <druid>1.1.19</druid>
         <fastjson>1.2.60</fastjson>
         <commons-collections>3.1</commons-collections>
+        <lombok>1.18.10</lombok>
     </properties>
 
     <dependencyManagement>
@@ -63,6 +64,12 @@
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson}</version>
             </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok}</version>
+                <scope>provided</scope><!--只在编译和测试的时候用-->
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -80,7 +87,6 @@
         <module>site-service</module>
         <module>site-auth</module>
         <module>site-common</module>
-        <module>site-scheduler</module>
     </modules>
 
 </project>
