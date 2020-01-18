@@ -1,7 +1,7 @@
 package it.world.gateway.config.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.world.common.dataDic.RespBody;
+import it.world.common.unified.RespBody;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
@@ -24,13 +24,13 @@ public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         ObjectMapper mapper = new ObjectMapper();
-        RespBody respBody=new RespBody(false,"401");
+        RespBody respBody=new RespBody(false,HttpServletResponse.SC_UNAUTHORIZED);
         try {
             if(authException.getCause() instanceof InvalidTokenException){
-                respBody.setMsg("token无效");
+                respBody.setMsg("该token无效");
                 mapper.writeValue(response.getOutputStream(), respBody);
             }else {
-                respBody.setMsg("token为空");
+                respBody.setMsg("访问此资源需要身份验证");
                 mapper.writeValue(response.getOutputStream(), respBody);
             }
         } catch (Exception e) {

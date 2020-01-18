@@ -2,23 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="it.world.service.mapper.SysUserMapper">
 
-    <resultMap id="users" type="SysUser">
-        <id column="id" property="id" jdbcType="INTEGER"></id>
+    <resultMap id="user" type="SysUser">
+        <id column="id" property="id" jdbcType="BIGINT"></id>
         <result column="username" property="username" jdbcType="VARCHAR"></result>
         <result column="password" property="password" jdbcType="VARCHAR"></result>
+        <result column="head_img_url" property="headImgUrl" jdbcType="VARCHAR"></result>
         <collection property="roles" ofType="SysRole" javaType="java.util.ArrayList">
+            <result column="srid" property="id" jdbcType="BIGINT"/>
             <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
             <collection property="sysPermissions" ofType="SysPermission" javaType="java.util.ArrayList">
+                <result column="spid" property="id" jdbcType="BIGINT"></result>
                 <result column="pm_name" property="pmName" jdbcType="VARCHAR"></result>
                 <result column="description" property="description" jdbcType="VARCHAR"></result>
-                <result column="pid" property="pid" jdbcType="INTEGER"></result>
+                <result column="pid" property="pid" jdbcType="BIGINT"></result>
                 <result column="url" property="url" jdbcType="VARCHAR"></result>
             </collection>
         </collection>
     </resultMap>
 
-    <select id="findByUsername" resultMap="users">
-        select *,sr.id srid from sys_user su
+    <select id="findByUsername" resultMap="user">
+        select su.id, username, password,head_img_url,sr.id srid, role_name,sp.id spid, pm_name, description, url, pid
+        from sys_user su
         left join sys_role_user sru
         on (su.id=sru.sys_user_id)
         left join sys_role sr

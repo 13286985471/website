@@ -1,15 +1,14 @@
 package it.world.service.controller;
 
 
-import it.world.common.dataDic.RespBody;
+import it.world.common.unified.RespBody;
 import it.world.common.entity.SysPermission;
 import it.world.common.entity.SysUser;
+import it.world.common.entity.SysUserInfo;
 import it.world.service.service.SysPermissionService;
 import it.world.service.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,8 +33,10 @@ public class UserInfoCtrl {
     public SysUser queryUser(@PathVariable("username") String username) {
         return sysUserService.findUserByName(username);
     }
-    @RequestMapping("/admin/{username}")
-    public RespBody admin(@PathVariable("username") String username) {
-        return new RespBody(sysUserService.findUserByName(username));
+    @RequestMapping("/register")
+    public RespBody register(@RequestBody SysUser sysUser,@RequestBody SysUserInfo sysUserInfo) {
+        RespBody respBody= new RespBody();
+        respBody.setData(sysUser,sysUserInfo);
+        return respBody;
     }
 }

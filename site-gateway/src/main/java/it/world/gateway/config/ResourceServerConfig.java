@@ -1,7 +1,5 @@
 package it.world.gateway.config;
 
-import it.world.gateway.config.impl.AuthExceptionEntryPoint;
-import it.world.gateway.config.impl.CustomAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +7,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 /**
  * 此处拦截，是为了对access_token进行检验。
@@ -22,6 +22,10 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Autowired
     private Properties properties;
+    @Autowired
+    AccessDeniedHandler accessDeniedHandler;
+    @Autowired
+    AuthenticationEntryPoint authenticationEntryPoint;
     private static final String RESOURCE_ID;
     static {
         /*
@@ -34,8 +38,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(ResourceServerSecurityConfigurer resources) {
         resources
                 .resourceId(RESOURCE_ID).stateless(true)
-                .authenticationEntryPoint(new AuthExceptionEntryPoint())
-                .accessDeniedHandler(new CustomAccessDeniedHandler());
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler);
     }
 
     @Override

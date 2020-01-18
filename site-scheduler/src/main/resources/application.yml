@@ -28,7 +28,7 @@ spring:
     maxActive: 20
     maxWait: 60000
     timeBetweenEvictionRunsMillis: 60000
-    minEvictableIdleTimeMillis: 300000
+    minEvictableIdleTimeMillis: 600000
     validationQuery: SELECT 1 FROM DUAL
     testWhileIdle: true
     testOnBorrow: false
@@ -41,10 +41,10 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 mybatis:
   mapper-locations: classpath:mapping/*.xml
-  type-aliases-package: it.world.common.entity
+  type-aliases-package: it.world.scheduler.entity
   configuration:
     map-underscore-to-camel-case: true
 
 logging:
   level:
-    root: debug
+    root: info

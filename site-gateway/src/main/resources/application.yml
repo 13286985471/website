@@ -34,7 +34,6 @@ spring:
 properties:
   #不拦截的Url
   ignoreUrls:
-    - "/"
     - "/userlogin"
     - "/error"
     - "/authentication/form"
