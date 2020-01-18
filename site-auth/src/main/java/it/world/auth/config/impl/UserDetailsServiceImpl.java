@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SysUser user = authFeign.queryUser(username);
         if (user==null){
-            return null;
+            throw new UsernameNotFoundException("该用户不存在");
         }
         return new UserDetailsImpl(user);
     }
