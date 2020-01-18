@@ -13,7 +13,7 @@ public class RespBody {
     //响应消息
     private String msg="success";
     //响应内容
-    private Object[] data;
+    private Object data;
 
     public RespBody(boolean state,Integer code) {
         this.state=state;
@@ -27,22 +27,18 @@ public class RespBody {
     }
 
 
-    public RespBody(boolean state,Integer code, String msg, Object... data) {
+    public RespBody(boolean state,Integer code, String msg, Object data) {
         this.state=state;
         this.code = code;
         this.msg = msg;
-        this.data = data;
+        this.data=data;
     }
 
     public RespBody(Object data) {
-        this.data[0] = data;
+        this.data=data;
     }
 
     public RespBody() {
 
-    }
-
-    public void setData(Object... data) {
-        this.data = data;
     }
 }

@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SysUserMapper{
     SysUser findByUsername(@Param("username") String username);
-    Integer insertUser(@Param("user") SysUser user);
+    Integer insertUser(SysUser user);
 }

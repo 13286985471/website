@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -38,8 +39,10 @@ public class UserInfoCtrl {
     }
     @RequestMapping("/register")
     public RespBody register(@RequestBody SysUser user) {
-        Integer id = sysUserService.insUser(user);
-        RespBody respBody= new RespBody(id);
-        return respBody;
+        HashMap<String, Integer> hashMap = new HashMap<>();
+        hashMap.put("id",17);
+        return new RespBody(hashMap);
+
+
     }
 }

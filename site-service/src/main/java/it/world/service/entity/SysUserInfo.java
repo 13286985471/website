@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 @Data
 public class SysUserInfo implements Serializable {
-  private Long id;
+  private Integer id;
   private String provinceCode;
   private String cityCode;
   private String districtCode;

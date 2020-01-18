@@ -10,7 +10,7 @@ import java.util.List;
 public class SysUser implements Serializable {
 
   private static final long serialVersionUID = -4392052022219864593L;
-  private Long id;
+  private Integer id;
   private String username;
   private String password;
   private String headImgUrl;

@@ -9,11 +9,9 @@ import java.io.Serializable;
 public class SysPermission implements Serializable {
 
 
-  private Long id;
+  private Integer id;
   private String pmName;
   private String description;
   private String url;
-  private Long pid;
-
-
+  private Integer pid;
 }

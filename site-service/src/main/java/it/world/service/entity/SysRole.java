@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class SysRole implements Serializable {
 
-  private Long id;
+  private Integer id;
   private String roleName;
   private String description;
   private List<SysPermission> sysPermissions;

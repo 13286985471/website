@@ -23,6 +23,7 @@ public class SysUserServiceImpl implements SysUserService {
         String password = sysUser.getPassword();
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         sysUser.setPassword(bCryptPasswordEncoder.encode(password));
-        return sysUserMapper.insertUser(sysUser);
+        sysUserMapper.insertUser(sysUser);
+        return sysUser.getId();
     }
 }
