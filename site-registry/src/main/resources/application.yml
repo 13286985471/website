@@ -6,10 +6,6 @@ spring:
   boot:
     admin:
       context-path: admin
-  security:
-    user:
-      name: "user"
-      password: "password"
 eureka:
   client:
     fetch-registry: false
