@@ -12,6 +12,8 @@ import org.springframework.scheduling.annotation.Scheduled;
  * 两种方式二选一
  */
 //@Configuration
+//@EnableAsync
+//@EnableScheduling
 public class SchedulerListener {
     @Autowired
     public CronSchedulerJob scheduleJobs;
