@@ -11,6 +11,10 @@ spring:
     prefix: classpath:templates/
     suffix: .html
     encoding: utf-8
+  boot:
+    admin:
+      client:
+        url: http://localhost:8761/admin
 #  cloud:
 #    gateway:
 #      discovery:
@@ -37,6 +41,7 @@ properties:
     - "/error"
     - "/uaa/**"
     - "/service/userInfo/register"
+    - "/actuator/**"
 
 
 eureka:
