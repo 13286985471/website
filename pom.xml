@@ -12,8 +12,8 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
-        <spring.boot.version>2.1.8.RELEASE</spring.boot.version>
+        <spring-cloud.version>Greenwich.SR4</spring-cloud.version>
+        <spring.boot.version>2.1.10.RELEASE</spring.boot.version>
         <ganymed-ssh2>build210</ganymed-ssh2>
         <junrar>3.1.0</junrar>
         <mybatis-spring-boot-starter>2.1.0</mybatis-spring-boot-starter>
@@ -21,9 +21,11 @@
         <fastjson>1.2.60</fastjson>
         <commons-collections>3.1</commons-collections>
         <lombok>1.18.10</lombok>
+        <spring-boot-admin-starter-client>2.1.1</spring-boot-admin-starter-client>
     </properties>
 
     <dependencyManagement>
+        <!--spring官方对应版本查看：https://start.spring.io/actuator/info-->
         <dependencies>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -69,6 +71,11 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok}</version>
                 <scope>provided</scope><!--只在编译和测试的时候用-->
+            </dependency>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+                <version>${spring-boot-admin-starter-client}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

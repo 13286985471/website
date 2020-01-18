@@ -6,6 +6,10 @@ spring:
   boot:
     admin:
       context-path: admin
+  security:
+    user:
+      name: "user"
+      password: "password"
 eureka:
   client:
     fetch-registry: false
@@ -19,11 +23,11 @@ eureka:
 logging:
   level:
     root: info
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: "*"
-#  endpoint:
-#    health:
-#      show-details: ALWAYS
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
