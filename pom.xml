@@ -22,6 +22,9 @@
         <commons-collections>3.1</commons-collections>
         <lombok>1.18.10</lombok>
         <spring-boot-admin-starter-client>2.1.1</spring-boot-admin-starter-client>
+        <spring-boot-admin-starter-server>2.1.1</spring-boot-admin-starter-server>
+        <site-common>1.0</site-common>
+        <spring-cloud-starter-feign>1.4.7.RELEASE</spring-cloud-starter-feign>
     </properties>
 
     <dependencyManagement>
@@ -76,6 +79,21 @@
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-starter-client</artifactId>
                 <version>${spring-boot-admin-starter-client}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-server</artifactId>
+                <version>${spring-boot-admin-starter-server}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.world</groupId>
+                <artifactId>site-common</artifactId>
+                <version>${site-common}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-feign</artifactId>
+                <version>${spring-cloud-starter-feign}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
