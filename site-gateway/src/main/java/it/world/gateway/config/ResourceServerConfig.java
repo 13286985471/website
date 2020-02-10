@@ -54,7 +54,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .authorizeRequests().antMatchers(properties.ignoreUrls)//不需要权限认证的url
                 .permitAll().anyRequest().authenticated()
                 .and()
-                .csrf().disable()//关闭跨站请求防护
+                .csrf().disable().headers().disable()//关闭跨站请求防护
                 .httpBasic();
     }
 
