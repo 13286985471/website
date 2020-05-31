@@ -1,6 +1,7 @@
 server:
   port: 8050
-
+  tomcat:
+    basedir: /aa/
 spring:
   application:
     name: site-gateway

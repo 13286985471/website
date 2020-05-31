@@ -19,6 +19,27 @@ spring:
   devtools:
     restart:
       enabled: true
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: root
+    password: root
+    #虚拟host 可以不设置,使用server默认host
+    #virtual-host: JCcccHost
+  #  redis:
+#    host: 192.168.60.18
+#    port: 6379
+#    password: redis
+#    jedis:
+#      pool:
+#        max-active: 8
+#        max-wait: -1
+#        max-idle: 500
+#        min-idle: 0
+#    lettuce:
+#      shutdown-timeout: 0
+#    timeout: 100
+
   datasource:
     username: root
     password: root
@@ -57,7 +78,7 @@ mybatis-plus:
 
 logging:
   level:
-    root: debug
+    root: info
 
 management:
   endpoints:

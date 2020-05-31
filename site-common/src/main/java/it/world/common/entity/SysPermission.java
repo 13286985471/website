@@ -1,4 +1,4 @@
-package it.world.gateway.entity;
+package it.world.common.entity;
 
 
 import lombok.Data;
@@ -14,6 +14,4 @@ public class SysPermission implements Serializable {
   private String description;
   private String url;
   private Integer pid;
-
-
 }

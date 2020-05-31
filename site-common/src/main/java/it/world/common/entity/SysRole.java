@@ -1,4 +1,4 @@
-package it.world.service.entity;
+package it.world.common.entity;
 
 
 import lombok.Data;

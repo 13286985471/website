@@ -21,7 +21,7 @@ spring:
         url: http://localhost:8761/admin
 logging:
   level:
-    root: debug
+    root: info
 management:
   endpoints:
     web:

@@ -1,7 +1,7 @@
 package it.world.service.mapper;
 
 
-import it.world.service.entity.SysPermission;
+import it.world.common.entity.SysPermission;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

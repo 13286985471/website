@@ -1,8 +1,8 @@
 package it.world.service.mapper;
 
 
-import it.world.service.entity.SysRoleUser;
-import it.world.service.entity.SysUser;
+import it.world.common.entity.SysRoleUser;
+import it.world.common.entity.SysUser;
 
 public interface SysRoleUserMapper {
     SysRoleUser findRoleIdsByUserId(SysUser user);

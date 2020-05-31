@@ -1,11 +1,10 @@
-package it.world.gateway.entity;
+package it.world.common.entity;
 
 
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
-
 @Data
 public class SysUser implements Serializable {
 
