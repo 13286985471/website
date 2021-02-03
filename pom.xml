@@ -22,7 +22,7 @@
         <spring.boot.version>2.1.8.RELEASE</spring.boot.version>
         <spring-cloud-starter-netflix-eureka-server>2.1.2.RELEASE</spring-cloud-starter-netflix-eureka-server>
         <ganymed-ssh2>build210</ganymed-ssh2>
-        <ant>1.9.5</ant>
+        <ant>1.10.9</ant>
         <junrar>3.1.0</junrar>
         <mybatis-spring-boot-starter>2.1.0</mybatis-spring-boot-starter>
         <mysql-connector-java>8.0.17</mysql-connector-java>
