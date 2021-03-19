@@ -2,10 +2,7 @@ server:
   port: 8761
 spring:
   application:
-    name: site-eureka
-  boot:
-    admin:
-      context-path: admin
+    name: site-registry
 eureka:
   client:
     fetch-registry: false
