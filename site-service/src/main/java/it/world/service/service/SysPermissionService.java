@@ -1,7 +1,7 @@
 package it.world.service.service;
 
 
-import it.world.common.entity.SysPermission;
+import it.world.common.bean.entity.SysPermission;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

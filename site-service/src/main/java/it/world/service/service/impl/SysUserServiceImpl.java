@@ -1,7 +1,7 @@
 package it.world.service.service.impl;
 
 
-import it.world.common.entity.SysUser;
+import it.world.common.bean.entity.SysUser;
 import it.world.service.mapper.SysUserMapper;
 import it.world.service.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
