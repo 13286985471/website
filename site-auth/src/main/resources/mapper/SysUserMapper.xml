@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="it.world.service.mapper.SysUserMapper">
+    <select id="test1">
+        begin ;
+        insert into website.sys_user (username, password) values('joram','789456');
+        update website.sys_user set password='123456' where username='joram';
+        commit;
+    </select>
+    <resultMap id="user" type="SysUser">
+        <id column="id" property="id" jdbcType="BIGINT"></id>
+        <result column="username" property="username" jdbcType="VARCHAR"></result>
+        <result column="password" property="password" jdbcType="VARCHAR"></result>
+        <result column="head_img_url" property="headImgUrl" jdbcType="VARCHAR"></result>
+        <collection property="roles" ofType="SysRole" javaType="java.util.ArrayList">
+            <result column="srid" property="id" jdbcType="BIGINT"/>
+            <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+            <collection property="sysPermissions" ofType="SysPermission" javaType="java.util.ArrayList">
+                <result column="spid" property="id" jdbcType="BIGINT"></result>
+                <result column="pm_name" property="pmName" jdbcType="VARCHAR"></result>
+                <result column="description" property="description" jdbcType="VARCHAR"></result>
+                <result column="pid" property="pid" jdbcType="BIGINT"></result>
+                <result column="url" property="url" jdbcType="VARCHAR"></result>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="findByUsername" resultMap="user">
+        select su.id, username, password,head_img_url,sr.id srid, role_name,sr.description srDescription,sp.id spid, pm_name, sp.description spDescription, url, pid
+        from sys_user su
+        left join sys_role_user sru
+        on (su.id=sru.sys_user_id)
+        left join sys_role sr
+        on (sru.sys_role_id=sr.id)
+        left join sys_permission_role spr
+        on sr.id=spr.sys_role_id
+        left join sys_permission sp
+        on spr.sys_permission_id=sp.id
+        where su.username=#{username}
+    </select>
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="SysUser">
+        insert into sys_user (username, password,created_time)
+        values (#{username},#{password},now())
+    </insert>
+</mapper>
