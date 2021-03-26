@@ -1,14 +1,12 @@
-package it.world.common.entity;
+package it.world.common.bean.entity;
 
 import lombok.Data;
-
-import java.io.Serializable;
 
 /**
  * 用户拓展信息表
  */
 @Data
-public class SysUserInfo implements Serializable {
+public class SysUserInfo  extends BaseEntity {
   private Integer id;
   private String provinceCode;
   private String cityCode;

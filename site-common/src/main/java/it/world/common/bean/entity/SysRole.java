@@ -1,13 +1,12 @@
-package it.world.common.entity;
+package it.world.common.bean.entity;
 
 
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class SysRole implements Serializable {
+public class SysRole  extends BaseEntity {
 
   private Integer id;
   private String roleName;

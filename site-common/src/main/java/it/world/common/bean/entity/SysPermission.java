@@ -1,12 +1,10 @@
-package it.world.common.entity;
+package it.world.common.bean.entity;
 
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
-public class SysPermission implements Serializable {
+public class SysPermission extends BaseEntity{
 
 
   private Integer id;

@@ -2,8 +2,8 @@ package it.world.auth.config;
 
 
 import it.world.auth.exception.BootOAuth2WebResponseExceptionTranslator;
-import it.world.common.entity.SysRole;
-import it.world.common.entity.SysUser;
+import it.world.common.bean.entity.SysRole;
+import it.world.common.bean.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

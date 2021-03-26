@@ -1,14 +1,12 @@
-package it.world.common.entity;
+package it.world.common.bean.entity;
 
 
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.List;
 @Data
-public class SysUser implements Serializable {
+public class SysUser  extends BaseEntity {
 
-  private static final long serialVersionUID = -4392052022219864593L;
   private Integer id;
   private String username;
   private String password;

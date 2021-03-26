@@ -1,9 +1,9 @@
 package it.world.auth.config.impl;
 
 
-import it.world.common.entity.SysPermission;
-import it.world.common.entity.SysRole;
-import it.world.common.entity.SysUser;
+import it.world.common.bean.entity.SysPermission;
+import it.world.common.bean.entity.SysRole;
+import it.world.common.bean.entity.SysUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

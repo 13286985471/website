@@ -12,10 +12,8 @@ spring:
     prefix: classpath:templates/
     suffix: .html
     encoding: utf-8
-  boot:
-    admin:
-      client:
-        url: http://localhost:8761/admin
+  main:
+    allow-bean-definition-overriding: true
 #  cloud:
 #    gateway:
 #      discovery:
@@ -101,4 +99,3 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-

@@ -1,8 +1,8 @@
 package it.world.auth.config.impl;
 
 
-import it.world.auth.feign.AuthFeign;
-import it.world.common.entity.SysUser;
+import it.world.auth.service.SysUserService;
+import it.world.common.bean.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    private AuthFeign authFeign;
+    private SysUserService sysUserService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SysUser user = authFeign.queryUser(username);
+        SysUser user = sysUserService.findUserByName(username);
         if (user==null){
             throw new UsernameNotFoundException("该用户不存在");
         }
