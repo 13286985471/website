@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: 47.113.204.179:8848
+        file-extension: yaml
+        prefix: service
+        group: webSite
+      discovery:
+        server-addr: 47.113.204.179:8848

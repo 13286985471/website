@@ -1,7 +1,7 @@
 package it.world.service.controller;
 
 
-import it.world.common.unified.RespBody;
+import it.world.common.bean.Result;
 import it.world.common.bean.entity.SysPermission;
 import it.world.common.bean.entity.SysUser;
 import it.world.service.service.SysPermissionService;
@@ -38,10 +38,10 @@ public class UserInfoCtrl {
         return sysUserService.findUserByName(username);
     }
     @RequestMapping("/register")
-    public RespBody register(@RequestBody SysUser user) {
+    public Result register(@RequestBody SysUser user) {
         HashMap<String, Integer> hashMap = new HashMap<>();
         hashMap.put("id",17);
-        return new RespBody(hashMap);
+        return new Result(500, hashMap);
 
 
     }
